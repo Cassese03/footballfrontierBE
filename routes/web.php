@@ -73,8 +73,8 @@ Route::any('admin/ajax/elimina_partecipante/{id_utente}/{id_viaggio}',array('use
 Route::any('admin/ajax/search_partecipante/{like}',array('uses'=>'AjaxAdminController@search_partecipante'));
 
 
-Route::any('api/login',array('uses'=>'ApiController@login'));
-Route::any('api/fast_login',array('uses'=>'ApiController@fast_login'));
+Route::any('api2/login',array('uses'=>'ApiController@login'));
+Route::any('api2/fast_login',array('uses'=>'ApiController@fast_login'));
 
 Route::any('api/registra',array('uses'=>'ApiController@registra'));
 Route::any('api/viaggio',array('uses'=>'ApiController@viaggio'));
