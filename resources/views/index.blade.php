@@ -557,7 +557,7 @@
     </style>
 </head>
 <body>
-<img src="/raimon.png" alt="footballfrontier">
+<img src="/img/raimon.jpg" alt="footballfrontier">
 </body>
 
 <script type="text/javascript">
