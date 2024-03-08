@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::any('',array('uses'=>'HomeController@index'));
+Route::any('',array('uses'=>'HomeController@index'));/*
 Route::any('landing',array('uses'=>'HomeController@landing'));
 Route::any('privacy',array('uses'=>'HomeController@privacy'));
 Route::any('privacy_app',array('uses'=>'HomeController@privacy_app'));
@@ -71,11 +71,11 @@ Route::any('admin/ajax/update_road/{id}/{content}/{data_inizio}/{data_fine}/{id_
 
 Route::any('admin/ajax/elimina_partecipante/{id_utente}/{id_viaggio}',array('uses'=>'AjaxAdminController@elimina_partecipante'));
 Route::any('admin/ajax/search_partecipante/{like}',array('uses'=>'AjaxAdminController@search_partecipante'));
-
+*/
 
 Route::any('api2/login',array('uses'=>'ApiController@login'));
 Route::any('api2/fast_login',array('uses'=>'ApiController@fast_login'));
-
+/*
 Route::any('api/registra',array('uses'=>'ApiController@registra'));
 Route::any('api/viaggio',array('uses'=>'ApiController@viaggio'));
 Route::any('api/viaggio_roadmap',array('uses'=>'ApiController@viaggio_roadmap'));
@@ -89,4 +89,4 @@ Route::any('api/get_explorer_filter_bydesc/{filter}',array('uses'=>'ApiControlle
 
 Route::any('api/registra2',array('uses'=>'ApiController@registra2'));
 Route::any('api/is_online/{token}',array('uses'=>'ApiController@is_online'));
-Route::any('api/token',array('uses'=>'ApiController@token'));
+Route::any('api/token',array('uses'=>'ApiController@token'));*/

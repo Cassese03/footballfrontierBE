@@ -18,14 +18,14 @@ class HomeController extends Controller
 {
 
     public function index(Request $request){
-
+/*
         $dati = $request->all();
 
         $messaggio = '';
 
         if (isset($dati['send_email'])) {
             unset($dati['send_email']);
-            
+
             $nome = explode(' ', $dati['nome_cognome'], 2);
 
             if (sizeof($nome) > 1) {
@@ -63,7 +63,7 @@ class HomeController extends Controller
                 unset($dati["email"]);
                 unset($dati["number"]);
                 unset($dati["message"]);
-                $nome = '';     
+                $nome = '';
                 $cognome ='';
                 $messaggio = 'Registrazione non avvenuta. Ci scusiamo per il disagio';
                 return View::make('landing',compact('messaggio'));
@@ -78,7 +78,8 @@ class HomeController extends Controller
             $messaggio = 'Registrazione avvenuta con successo';
         }
 
-        return View::make('landing_new',compact('messaggio'));
+        return View::make('landing_new',compact('messaggio'));*/
+        return View::make('index');
 
     }
 
