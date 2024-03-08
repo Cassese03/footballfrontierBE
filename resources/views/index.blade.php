@@ -557,7 +557,7 @@
     </style>
 </head>
 <body>
-<img src="./raimon.png" alt="footballfrontier">
+<img src="/raimon.png" alt="footballfrontier">
 </body>
 
 <script type="text/javascript">
@@ -566,4 +566,3 @@
 </script>
 <script type="text/javascript" src="//cdn.iubenda.com/cs/gpp/stub.js"></script>
 <script type="text/javascript" src="//cdn.iubenda.com/cs/iubenda_cs.js" charset="UTF-8" async></script>
-@include("common.footer")
