@@ -19,8 +19,8 @@ class OwnCors
         header("Access-Control-Allow-Origin: https://football-app-murex.vercel.app");
 
         $headers = [
-            'Access-Control-Allow-Methods' => 'POST, GET, OPTIONS, PUT, DELETE',
-            'Access-Control-Allow-Headers' => 'Content-Type, X-Auth-Token, Origin, Authorization'
+            'Access-Control-Allow-Methods' => 'POST, GET',
+            'Access-Control-Allow-Headers' => 'Content-Type, X-Auth-Token, Origin, Authorization,Methods'
         ];
         if ($request->getMethod() == "OPTIONS") {
             return response('OK')
