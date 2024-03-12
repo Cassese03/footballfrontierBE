@@ -618,7 +618,7 @@ class ApiController extends Controller
                 $utenti = DB::connection('pgsql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
                 if ($utenti[0]->abilitato == 1) {
                     if ($dati['id'] == 0) {
-                        $id = DB::connection('pgsql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
+                        $id = DB::connection('pgsql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ')[0]->id;
                         $profilo = DB::connection('pgsql')->select(
                             'SELECT s.nome as NomeSquadra,
                                     u.nominativo as Nome,
