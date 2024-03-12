@@ -16,7 +16,7 @@ class OwnCors
      */
     public function handle(Request $request, Closure $next)
     {
-        header("Access-Control-Allow-Origin: https://football-app-murex.vercel.app/");
+        header("Access-Control-Allow-Origin: https://football-app-murex.vercel.app");
 
         $headers = [
             'Access-Control-Allow-Methods' => 'POST, GET, OPTIONS, PUT, DELETE',
