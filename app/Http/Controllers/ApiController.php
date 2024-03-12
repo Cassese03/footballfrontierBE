@@ -624,8 +624,8 @@ class ApiController extends Controller
                                     u.nominativo as Nome,
                                     g.ruolo as Ruolo
                                     from utente u
-                                    left join squadra s on g.id_squadra = s.id
                                     left join giocatori g on g.id_utente = u.id
+                                    left join squadra s on g.id_squadra = s.id
                                     where u.id = \'' . $id . '\' '
                         );
                         $statistiche_personali = DB::connection('pgsql')->select(
@@ -648,8 +648,8 @@ class ApiController extends Controller
                                     u.nominativo as Nome,
                                     g.ruolo as Ruolo
                                     from utente u
-                                    left join squadra s on g.id_squadra = s.id
                                     left join giocatori g on g.id_utente = u.id
+                                    left join squadra s on g.id_squadra = s.id
                                     where u.id = \'' . $dati['id'] . '\' '
                         );
                         $statistiche_personali = DB::connection('pgsql')->select(
