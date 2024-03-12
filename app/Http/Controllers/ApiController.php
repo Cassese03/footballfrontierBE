@@ -475,61 +475,6 @@ class ApiController extends Controller
         }
     }
 
-    public function login(Request $request)
-    {
-        $dati = json_decode(file_get_contents('php://input'), true);
-        //$this->is_online($token);
-
-        if (isset($dati['email'])) {
-
-            $utenti = DB::connection('pgsql')->select('SELECT * from utente where email = \'' . htmlentities($dati['email'], 3, 'UTF-8' . '') . '\' and password = \'' . htmlentities($dati['password'], 3, 'UTF-8' . '') . '\'');
-
-            if (sizeof($utenti) > 0) {
-
-                $utente = $utenti[0];
-
-                if ($utente->abilitato == 1) {
-                    $access_token = Str::random(50);
-                    DB::connection('pgsql')->select("UPDATE utente SET access_token = '" . $access_token . "' where id = " . $utente->id);
-
-                    return response('{"access_token": "' . $access_token . '"}', 200);
-
-                } else {
-                    return response('{"error": "Utente non abilitato."}', 401);
-                }
-            } else
-                return response('{"error": "Username o Password sbagliata."}', 400);
-        } else
-            return response('{"error": "Dati non formattati correttamente."}', 404);
-    }
-
-    public function fast_login(Request $request)
-    {
-        $dati = json_decode(file_get_contents('php://input'), true);
-        //$this->is_online($token);
-
-        if (isset($dati['email']) && isset($dati['token'])) {
-
-            $utenti = DB::connection('pgsql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' and email = \'' . htmlentities($dati['email'], 3, 'UTF-8' . '') . '\'');
-
-            if (sizeof($utenti) > 0) {
-
-                $utente = $utenti[0];
-
-                if ($utente->abilitato == 1) {
-                    $access_token = Str::random(50);
-                    DB::connection('pgsql')->select("UPDATE utente SET access_token = '" . $access_token . "' where id = " . $utente->id);
-
-                    return response('{"access_token": "' . $access_token . '"}', 200);
-
-                } else {
-                    return response('{"error": "Utente non abilitato."}', 401);
-                }
-            } else
-                return response('{"error": "Username o Token sbagliato."}', 400);
-        } else
-            return response('{"error": "Dati non formattati correttamente."}', 404);
-    }
 
     public function is_online($token)
     {
@@ -604,5 +549,132 @@ class ApiController extends Controller
         if (!session()->has('utente')) return Redirect::to('admin/login')->send();
     }
 
+
+    /*                                                          */
+
+
+    public function login(Request $request)
+    {
+        $dati = json_decode(file_get_contents('php://input'), true);
+        //$this->is_online($token);
+
+        if (isset($dati['email'])) {
+
+            $utenti = DB::connection('pgsql')->select('SELECT * from utente where email = \'' . htmlentities($dati['email'], 3, 'UTF-8' . '') . '\' and password = \'' . htmlentities($dati['password'], 3, 'UTF-8' . '') . '\'');
+
+            if (sizeof($utenti) > 0) {
+
+                $utente = $utenti[0];
+
+                if ($utente->abilitato == 1) {
+                    $access_token = Str::random(50);
+                    DB::connection('pgsql')->select("UPDATE utente SET access_token = '" . $access_token . "' where id = " . $utente->id);
+
+                    return response('{"access_token": "' . $access_token . '"}', 200);
+
+                } else {
+                    return response('{"error": "Utente non abilitato."}', 401);
+                }
+            } else
+                return response('{"error": "Username o Password sbagliata."}', 400);
+        } else
+            return response('{"error": "Dati non formattati correttamente."}', 404);
+    }
+
+    public function fast_login(Request $request)
+    {
+        $dati = json_decode(file_get_contents('php://input'), true);
+        //$this->is_online($token);
+
+        if (isset($dati['email']) && isset($dati['token'])) {
+
+            $utenti = DB::connection('pgsql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' and email = \'' . htmlentities($dati['email'], 3, 'UTF-8' . '') . '\'');
+
+            if (sizeof($utenti) > 0) {
+
+                $utente = $utenti[0];
+
+                if ($utente->abilitato == 1) {
+                    $access_token = Str::random(50);
+                    DB::connection('pgsql')->select("UPDATE utente SET access_token = '" . $access_token . "' where id = " . $utente->id);
+
+                    return response('{"access_token": "' . $access_token . '"}', 200);
+
+                } else {
+                    return response('{"error": "Utente non abilitato."}', 401);
+                }
+            } else
+                return response('{"error": "Username o Token sbagliato."}', 400);
+        } else
+            return response('{"error": "Dati non formattati correttamente."}', 404);
+    }
+
+
+    public function profilo(Request $request)
+    {
+        $dati = json_decode(file_get_contents('php://input'), true);
+        if (isset($dati['token'])) {
+            if (isset($dati['id'])) {
+                $utenti = DB::connection('pgsql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
+                if ($utenti[0]->abilitato == 1) {
+                    if ($dati['id'] == 0) {
+                        $id = DB::connection('pgsql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
+                        $profilo = DB::connection('pgsql')->select(
+                            'SELECT s.nome as NomeSquadra,
+                                    u.nominativo as Nome,
+                                    g.ruolo as Ruolo
+                                    from utente u
+                                    left join squadra s on g.id_squadra = s.id
+                                    left join giocatori g on g.id_utente = u.id
+                                    where u.id = \'' . $id . '\' '
+                        );
+                        $statistiche_personali = DB::connection('pgsql')->select(
+                            'SELECT
+                                    (SELECT SUM(assist) from statistiche_partita where id_giocatore = \'' . $id . '\') as Assist,
+                                    (SELECT SUM(gol) from statistiche_partita where id_giocatore = \'' . $id . '\') as Gol,
+                                    (SELECT count(id) from statistiche_partita where id_giocatore = \'' . $id . '\') as Presenze '
+                        );
+
+                        $statistiche_squadra = DB::connection('pgsql')->select(
+                            'SELECT
+                                    (SELECT SUM(id) from partite   where id_squadra_vincente = (SELECT TOP 1 id_squadra from giocatori where id_utente = \'' . $id . '\') ) as PartiteVinte,
+                                    (SELECT SUM(id) from partite   where (id_squadra_casa = (SELECT TOP 1 id_squadra from giocatori where id_utente = \'' . $id . '\') OR id_squadra_ospite = (SELECT TOP 1 id_squadra from giocatori where id_utente = \'' . $id . '\')) and id_squadra_vincente != (SELECT TOP 1 id_squadra from giocatori where id_utente = \'' . $id . '\')) ) as Gol,
+                                    (SELECT count(id) from partite where (id_squadra_casa = (SELECT TOP 1 id_squadra from giocatori where id_utente = \'' . $id . '\') OR id_squadra_ospite = (SELECT TOP 1 id_squadra from giocatori where id_utente = \'' . $id . '\'))) as Presenze ');
+                        return response(array("profilo" => $profilo, "statistichePersonali" => $statistiche_personali, "statisticheSquadra" => $statistiche_squadra), 200);
+
+                    } else {
+                        $profilo = DB::connection('pgsql')->select(
+                            'SELECT s.nome as NomeSquadra,
+                                    u.nominativo as Nome,
+                                    g.ruolo as Ruolo
+                                    from utente u
+                                    left join squadra s on g.id_squadra = s.id
+                                    left join giocatori g on g.id_utente = u.id
+                                    where u.id = \'' . $dati['id'] . '\' '
+                        );
+                        $statistiche_personali = DB::connection('pgsql')->select(
+                            'SELECT
+                                    (SELECT SUM(assist) from statistiche_partita where id_giocatore = \'' . $dati['id'] . '\') as Assist,
+                                    (SELECT SUM(gol) from statistiche_partita where id_giocatore = \'' . $dati['id'] . '\') as Gol,
+                                    (SELECT count(id) from statistiche_partita where id_giocatore = \'' . $dati['id'] . '\') as Presenze '
+                        );
+
+                        $statistiche_squadra = DB::connection('pgsql')->select(
+                            'SELECT
+                                    (SELECT SUM(id) from partite   where id_squadra_vincente = (SELECT TOP 1 id_squadra from giocatori where id_utente = \'' . $dati['id'] . '\') ) as PartiteVinte,
+                                    (SELECT SUM(id) from partite   where (id_squadra_casa = (SELECT TOP 1 id_squadra from giocatori where id_utente = \'' . $dati['id'] . '\') OR id_squadra_ospite = (SELECT TOP 1 id_squadra from giocatori where id_utente = \'' . $dati['id'] . '\')) and id_squadra_vincente != (SELECT TOP 1 id_squadra from giocatori where id_utente = \'' . $dati['id'] . '\')) ) as Gol,
+                                    (SELECT count(id) from partite where (id_squadra_casa = (SELECT TOP 1 id_squadra from giocatori where id_utente = \'' . $dati['id'] . '\') OR id_squadra_ospite = (SELECT TOP 1 id_squadra from giocatori where id_utente = \'' . $dati['id'] . '\'))) as Presenze ');
+                        return response(array("profilo" => $profilo, "statistichePersonali" => $statistiche_personali, "statisticheSquadra" => $statistiche_squadra), 200);
+                    }
+
+                } else
+                    return response('{"error": "Utente non abilitato."}', 404);
+            } else
+                return response('{
+                            "error": "Id non esistente."}', 404);
+        } else
+            return response('{
+                            "error": "Token non esistente."}', 404);
+    }
 
 }
