@@ -638,7 +638,7 @@ class ApiController extends Controller
                         $statistiche_squadra = DB::connection('pgsql')->select(
                             'SELECT
                                     (SELECT SUM(id) from partite   where id_squadra_vincente = (SELECT id_squadra from giocatori where id_utente = \'' . $id . '\' FETCH NEXT 1 ROWS ONLY) ) as PartiteVinte,
-                                    (SELECT SUM(id) from partite   where (id_squadra_casa = (SELECT id_squadra from giocatori where id_utente = \'' . $id . '\' FETCH NEXT 1 ROWS ONLY) OR id_squadra_ospite = (SELECT id_squadra from giocatori where id_utente = \'' . $id . '\' FETCH NEXT 1 ROWS ONLY)) and id_squadra_vincente != (SELECT id_squadra from giocatori where id_utente = \'' . $id . '\' FETCH NEXT 1 ROWS ONLY)) as Gol,
+                                    (SELECT SUM(id) from partite   where (id_squadra_casa = (SELECT id_squadra from giocatori where id_utente = \'' . $id . '\' FETCH NEXT 1 ROWS ONLY) OR id_squadra_ospite = (SELECT id_squadra from giocatori where id_utente = \'' . $id . '\' FETCH NEXT 1 ROWS ONLY)) and id_squadra_vincente != (SELECT id_squadra from giocatori where id_utente = \'' . $id . '\' FETCH NEXT 1 ROWS ONLY)) as PartitePerse,
                                     (SELECT count(id) from partite where (id_squadra_casa = (SELECT id_squadra from giocatori where id_utente = \'' . $id . '\' FETCH NEXT 1 ROWS ONLY) OR id_squadra_ospite = (SELECT id_squadra from giocatori where id_utente = \'' . $id . '\' FETCH NEXT 1 ROWS ONLY))) as Presenze ');
                         return response(array("profilo" => $profilo, "statistichePersonali" => $statistiche_personali, "statisticheSquadra" => $statistiche_squadra), 200);
 
