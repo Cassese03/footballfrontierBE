@@ -678,7 +678,7 @@ class ApiController extends Controller
                             "error": "Token non esistente."}', 404);
     }
 
-    public function profilo(Request $request)
+    public function classifica(Request $request)
     {
         $dati = json_decode(file_get_contents('php://input'), true);
         if (isset($dati['token'])) {
