@@ -640,7 +640,7 @@ class ApiController extends Controller
                                     (SELECT count(id) from partite   where id_squadra_vincente = (SELECT id_squadra from giocatori where id_utente = \'' . $id . '\' FETCH NEXT 1 ROWS ONLY) ) as PartiteVinte,
                                     (SELECT count(id) from partite   where (id_squadra_casa = (SELECT id_squadra from giocatori where id_utente = \'' . $id . '\' FETCH NEXT 1 ROWS ONLY) OR id_squadra_ospite = (SELECT id_squadra from giocatori where id_utente = \'' . $id . '\' FETCH NEXT 1 ROWS ONLY)) and id_squadra_vincente != (SELECT id_squadra from giocatori where id_utente = \'' . $id . '\' FETCH NEXT 1 ROWS ONLY)) as PartitePerse,
                                     (SELECT count(id) from partite where (id_squadra_casa = (SELECT id_squadra from giocatori where id_utente = \'' . $id . '\' FETCH NEXT 1 ROWS ONLY) OR id_squadra_ospite = (SELECT id_squadra from giocatori where id_utente = \'' . $id . '\' FETCH NEXT 1 ROWS ONLY))) as Presenze ');
-                        return response(array("profilo" => $profilo, "statistichePersonali" => $statistiche_personali, "statisticheSquadra" => $statistiche_squadra), 200);
+                        return response(array("profilo" => $profilo, "statistichePersonali" => $statistiche_personali, "statisticheSquadra" => $statistiche_squadra, "owner" => true), 200);
 
                     } else {
                         $profilo = DB::connection('pgsql')->select(
@@ -665,7 +665,7 @@ class ApiController extends Controller
                                     (SELECT count(id) from partite   where (id_squadra_casa = (SELECT id_squadra from giocatori where id_utente = \'' . $dati['id'] . '\' FETCH NEXT 1 ROWS ONLY) OR id_squadra_ospite = (SELECT id_squadra from giocatori where id_utente = \'' . $dati['id'] . '\' FETCH NEXT 1 ROWS ONLY)) and id_squadra_vincente != (SELECT id_squadra from giocatori where id_utente = \'' . $dati['id'] . '\' FETCH NEXT 1 ROWS ONLY)) as Gol,
                                     (SELECT count(id) from partite where (id_squadra_casa = (SELECT id_squadra from giocatori where id_utente = \'' . $dati['id'] . '\' FETCH NEXT 1 ROWS ONLY) OR id_squadra_ospite = (SELECT id_squadra from giocatori where id_utente = \'' . $dati['id'] . '\' FETCH NEXT 1 ROWS ONLY))) as Presenze ');
 
-                        return response(array("profilo" => $profilo, "statistichePersonali" => $statistiche_personali, "statisticheSquadra" => $statistiche_squadra), 200);
+                        return response(array("profilo" => $profilo, "statistichePersonali" => $statistiche_personali, "statisticheSquadra" => $statistiche_squadra, "owner" => false), 200);
                     }
 
                 } else
