@@ -708,26 +708,22 @@ class ApiController extends Controller
     }
 
 
-    public function programmato(Request $request)
+    public function calendario(Request $request)
     {
         $dati = json_decode(file_get_contents('php://input'), true);
         if (isset($dati['token'])) {
             $utenti = DB::connection('pgsql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
             if ($utenti[0]->abilitato == 1) {
-                $programma = DB::connection('pgsql')->select('SELECT
-                    s.nome AS Nome,
-                    COALESCE((SELECT sum(gol) FROM statistiche_partita WHERE id_squadra = s.id),0) AS GolFatti,
-                    COALESCE((SELECT sum(gol) FROM statistiche_partita WHERE id_partita in (select id from partite WHERE (id_squadra_casa = s.id OR id_squadra_ospite = s.id)) AND id_squadra != s.id),0) AS GolSubiti,
-                    (SELECT count(id_squadra_vincente) FROM partite WHERE completata = 1 and id_squadra_vincente = s.id) * 3 AS Punti,
-                    (SELECT COUNT(id) FROM partite WHERE completata = 1 and id_squadra_vincente = s.id) as PartiteVinte,
-                    (SELECT COUNT(id) FROM partite WHERE completata = 1 and (id_squadra_ospite = s.id OR id_squadra_casa = s.id) and id_squadra_vincente != s.id) as PartitePerse,
-                    (SELECT CASE WHEN id_squadra = s.id THEN true ELSE false END FROM utente WHERE id = ' . $utenti[0]->id . ') AS OWNER,
-                    row_number() over(order by (SELECT count(id_squadra_vincente) FROM partite WHERE id_squadra_vincente = s.id) * 3 desc) AS position
-                    FROM squadra s
-                    order by (SELECT count(id_squadra_vincente) FROM partite WHERE id_squadra_vincente = s.id) * 3 desc'
+                $programma = DB::connection('pgsql')->
+                select('SELECT
+                              p.id AS IdPartita,sc.nome as nomeCasa,sc.img as immagineCasa,so.nome as nomeOspite,so.img as immagineOspite,p.data as DataMatch
+                              FROM partite p
+                              LEFT JOIN squadra sc ON p.id_squadra_casa = sc.id
+                              LEFT JOIN squadra so ON p.id_squadra_ospite = so.id
+                              WHERE p.completata = 0'
                 );
 
-                return response($classifica, 200);
+                return response($programma, 200);
 
             } else
                 return response('{"error": "Utente non abilitato."}', 404);

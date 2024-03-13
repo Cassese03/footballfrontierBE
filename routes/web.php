@@ -77,7 +77,7 @@ Route::any('api2/login',array('uses'=>'ApiController@login'));
 Route::any('api2/fast_login',array('uses'=>'ApiController@fast_login'));
 Route::any('api2/profilo',array('uses'=>'ApiController@profilo'));
 Route::any('api2/classifica',array('uses'=>'ApiController@classifica'));
-Route::any('api2/programmato',array('uses'=>'ApiController@programmato'));
+Route::any('api2/calendario',array('uses'=>'ApiController@calendario'));
 /*
 Route::any('api/registra',array('uses'=>'ApiController@registra'));
 Route::any('api/viaggio',array('uses'=>'ApiController@viaggio'));
