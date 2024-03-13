@@ -692,7 +692,7 @@ class ApiController extends Controller
                     (SELECT COUNT(id) FROM partite WHERE completata = 1 and id_squadra_vincente = s.id) as PartiteVinte,
                     (SELECT COUNT(id) FROM partite WHERE completata = 1 and (id_squadra_ospite = s.id OR id_squadra_casa = s.id) and id_squadra_vincente != s.id) as PartitePerse,
                     (SELECT CASE WHEN id_squadra = s.id THEN true ELSE false END FROM utente WHERE id = ' . $utenti[0]->id . ') AS OWNER,
-                    COALESCE(s.img,0) as Immagine,
+                    s.img as Immagine,
                     row_number() over(order by (SELECT count(id_squadra_vincente) FROM partite WHERE id_squadra_vincente = s.id) * 3 desc) AS position
                     FROM squadra s
                     order by (SELECT count(id_squadra_vincente) FROM partite WHERE id_squadra_vincente = s.id) * 3 desc'
