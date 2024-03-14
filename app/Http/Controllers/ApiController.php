@@ -746,6 +746,7 @@ class ApiController extends Controller
                                 SUM(gol) as Gol,
                                 COUNT(s.id) as Presenze,
                                 u.nominativo,
+                                u.id as id_giocatore,
                                 g.ruolo
                                 FROM utente u
                                 LEFT JOIN statistiche_partita s on u.id = s.id_giocatore
