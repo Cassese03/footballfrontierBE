@@ -739,7 +739,7 @@ class ApiController extends Controller
             $utenti = DB::connection('pgsql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
             if (isset($dati['id_squadra'])) {
                 if ($utenti[0]->abilitato == 1) {
-                    $squadra = DB::connection('pgsql')->
+                    $giocatori = DB::connection('pgsql')->
                     select('SELECT
                                 SUM(assist) as Assist,
                                 SUM(gol) as Gol,
@@ -750,7 +750,7 @@ class ApiController extends Controller
                                 WHERE u.id_squadra = \'' . $dati['id_squadra'] . '\'
                                 GROUP BY u . nominativo'
                     );
-                    $giocatori = DB::connection('pgsql')->
+                    $squadra = DB::connection('pgsql')->
                     select('
                                 SELECT
                                 (SELECT nome FROM squadra WHERE id = \'' . $dati['id_squadra'] . '\') AS nome,
