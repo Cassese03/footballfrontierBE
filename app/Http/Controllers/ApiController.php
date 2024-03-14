@@ -744,11 +744,12 @@ class ApiController extends Controller
                                 SUM(assist) as Assist,
                                 SUM(gol) as Gol,
                                 COUNT(s.id) as Presenze,
-                                u.nominativo
+                                u.nominativo,
+                                u.ruolo
                                 FROM utente u
                                 LEFT JOIN statistiche_partita s on u.id = s.id_giocatore
                                 WHERE u.id_squadra = \'' . $dati['id_squadra'] . '\'
-                                GROUP BY u . nominativo'
+                                GROUP BY u.nominativo,u.ruolo'
                     );
                     $squadra = DB::connection('pgsql')->
                     select('
