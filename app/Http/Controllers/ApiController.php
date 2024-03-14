@@ -686,6 +686,7 @@ class ApiController extends Controller
             if ($utenti[0]->abilitato == 1) {
                 $classifica = DB::connection('pgsql')->select('SELECT
                     s.nome AS Nome,
+                    s.id AS id_squadra,
                     COALESCE((SELECT sum(gol) FROM statistiche_partita WHERE id_squadra = s.id),0) AS GolFatti,
                     COALESCE((SELECT sum(gol) FROM statistiche_partita WHERE id_partita in (select id from partite WHERE (id_squadra_casa = s.id OR id_squadra_ospite = s.id)) AND id_squadra != s.id),0) AS GolSubiti,
                     (SELECT count(id_squadra_vincente) FROM partite WHERE completata = 1 and id_squadra_vincente = s.id) * 3 AS Punti,
