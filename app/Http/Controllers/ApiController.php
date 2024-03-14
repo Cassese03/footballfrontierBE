@@ -732,4 +732,44 @@ class ApiController extends Controller
                             "error": "Token non esistente."}', 404);
     }
 
+    public function dettaglio_squadra(Request $request)
+    {
+        $dati = json_decode(file_get_contents('php://input'), true);
+        if (isset($dati['token'])) {
+            $utenti = DB::connection('pgsql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
+            if (isset($dati['id_squadra'])) {
+                if ($utenti[0]->abilitato == 1) {
+                    $squadra = DB::connection('pgsql')->
+                    select('SELECT
+                                SUM(assist) as Assist,
+                                SUM(gol) as Gol,
+                                COUNT(s.id) as Presenze,
+                                u.nominativo
+                                FROM utente u
+                                LEFT JOIN statistiche_partita s on u.id = s.id_giocatore
+                                WHERE u.id_squadra = \'' . $dati['id_squadra'] . '\'
+                                GROUP BY u . nominativo'
+                    );
+                    $giocatori = DB::connection('pgsql')->
+                    select('
+                                SELECT
+                                (SELECT nome FROM squadra WHERE id = \'' . $dati['id_squadra'] . '\') AS nome,
+                                (SELECT count(id) from partite   where completata = 1 and id_squadra_vincente = \'' . $dati['id_squadra'] . '\' ) as PartiteVinte,
+                                (SELECT count(id) from partite   where completata = 1 and (id_squadra_casa = \'' . $dati['id_squadra'] . '\' OR id_squadra_ospite = \'' . $dati['id_squadra'] . '\') and id_squadra_vincente != \'' . $dati['id_squadra'] . '\') as PartitePerse,
+                                (SELECT count(id) from partite where completata = 1 and (id_squadra_casa = \'' . $dati['id_squadra'] . '\' OR id_squadra_ospite = \'' . $dati['id_squadra'] . '\')) as Presenze'
+                    );
+
+                    return response(array("squadra" => $squadra, "giocatori" => $giocatori), 200);
+
+                } else
+                    return response('{
+                        "error": "Utente non abilitato."}', 404);
+            } else
+                return response('{
+                        "error": "Nessuna Squadra Scelta."}', 404);
+        } else
+            return response('{
+                        "error": "Token non esistente."}', 404);
+    }
+
 }
