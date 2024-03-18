@@ -687,12 +687,12 @@ class ApiController extends Controller
                 $classifica = DB::connection('mysql')->select('SELECT
                     s.nome AS nome,
                     s.id AS id_squadra,
-                    COALESCE((SELECT sum(gol) FROM statistiche_partita WHERE id_squadra = s.id),0) AS golFatti,
-                    COALESCE((SELECT sum(gol) FROM statistiche_partita WHERE id_partita in (select id from partite WHERE (id_squadra_casa = s.id OR id_squadra_ospite = s.id)) AND id_squadra != s.id),0) AS golSubiti,
-                    (SELECT count(id_squadra_vincente) FROM partite WHERE completata = 1 and id_squadra_vincente = s.id) * 3 AS Punti,
+                    COALESCE((SELECT sum(gol) FROM statistiche_partita WHERE id_squadra = s.id),0) AS golfatti,
+                    COALESCE((SELECT sum(gol) FROM statistiche_partita WHERE id_partita in (select id from partite WHERE (id_squadra_casa = s.id OR id_squadra_ospite = s.id)) AND id_squadra != s.id),0) AS golsubiti,
+                    (SELECT count(id_squadra_vincente) FROM partite WHERE completata = 1 and id_squadra_vincente = s.id) * 3 AS punti,
                     (SELECT COUNT(id) FROM partite WHERE completata = 1 and id_squadra_vincente = s.id) as partitevinte,
                     (SELECT COUNT(id) FROM partite WHERE completata = 1 and (id_squadra_ospite = s.id OR id_squadra_casa = s.id) and id_squadra_vincente != s.id) as partiteperse,
-                    (SELECT CASE WHEN id_squadra = s.id THEN true ELSE false END FROM utente WHERE id = ' . $utenti[0]->id . ') AS OWNER,
+                    (SELECT CASE WHEN id_squadra = s.id THEN true ELSE false END FROM utente WHERE id = ' . $utenti[0]->id . ') AS owner,
                     s.img as Immagine,
                     row_number() over(order by (SELECT count(id_squadra_vincente) FROM partite WHERE id_squadra_vincente = s.id) * 3 desc) AS position
                     FROM squadra s
@@ -717,7 +717,7 @@ class ApiController extends Controller
             if ($utenti[0]->abilitato == 1) {
                 $programma = DB::connection('mysql')->
                 select('SELECT
-                              p.id AS IdPartita,sc.nome as nomeCasa,sc.img as immagineCasa,so.nome as nomeOspite,so.img as immagineOspite,p.data as DataMatch
+                              p.id AS IdPartita,sc.nome as nomecasa,sc.img as immaginecasa,so.nome as nomeospite,so.img as immagineospite,p.data as datamatch
                               FROM partite p
                               LEFT JOIN squadra sc ON p.id_squadra_casa = sc.id
                               LEFT JOIN squadra so ON p.id_squadra_ospite = so.id
