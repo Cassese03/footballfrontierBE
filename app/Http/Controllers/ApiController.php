@@ -560,7 +560,7 @@ class ApiController extends Controller
 
         if (isset($dati['email'])) {
 
-            $utenti = DB::connection('pgsql')->select('SELECT * from utente where email = \'' . htmlentities($dati['email'], 3, 'UTF-8' . '') . '\' and password = \'' . htmlentities($dati['password'], 3, 'UTF-8' . '') . '\'');
+            $utenti = DB::connection('mysql')->select('SELECT * from utente where email = \'' . htmlentities($dati['email'], 3, 'UTF-8' . '') . '\' and password = \'' . htmlentities($dati['password'], 3, 'UTF-8' . '') . '\'');
 
             if (sizeof($utenti) > 0) {
 
@@ -568,7 +568,7 @@ class ApiController extends Controller
 
                 if ($utente->abilitato == 1) {
                     $access_token = Str::random(50);
-                    DB::connection('pgsql')->select("UPDATE utente SET access_token = '" . $access_token . "' where id = " . $utente->id);
+                    DB::connection('mysql')->select("UPDATE utente SET access_token = '" . $access_token . "' where id = " . $utente->id);
 
                     return response('{"access_token": "' . $access_token . '"}', 200);
 
@@ -588,7 +588,7 @@ class ApiController extends Controller
 
         if (isset($dati['email']) && isset($dati['token'])) {
 
-            $utenti = DB::connection('pgsql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' and email = \'' . htmlentities($dati['email'], 3, 'UTF-8' . '') . '\'');
+            $utenti = DB::connection('mysql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' and email = \'' . htmlentities($dati['email'], 3, 'UTF-8' . '') . '\'');
 
             if (sizeof($utenti) > 0) {
 
@@ -596,7 +596,7 @@ class ApiController extends Controller
 
                 if ($utente->abilitato == 1) {
                     $access_token = Str::random(50);
-                    DB::connection('pgsql')->select("UPDATE utente SET access_token = '" . $access_token . "' where id = " . $utente->id);
+                    DB::connection('mysql')->select("UPDATE utente SET access_token = '" . $access_token . "' where id = " . $utente->id);
 
                     return response('{"access_token": "' . $access_token . '"}', 200);
 
@@ -615,11 +615,11 @@ class ApiController extends Controller
         $dati = json_decode(file_get_contents('php://input'), true);
         if (isset($dati['token'])) {
             if (isset($dati['id'])) {
-                $utenti = DB::connection('pgsql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
+                $utenti = DB::connection('mysql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
                 if ($utenti[0]->abilitato == 1) {
                     if ($dati['id'] == 0) {
-                        $id = DB::connection('pgsql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ')[0]->id;
-                        $profilo = DB::connection('pgsql')->select(
+                        $id = DB::connection('mysql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ')[0]->id;
+                        $profilo = DB::connection('mysql')->select(
                             'SELECT s.nome as NomeSquadra,
                                     u.nominativo as Nome,
                                     g.ruolo as Ruolo
@@ -628,14 +628,14 @@ class ApiController extends Controller
                                     left join squadra s on g.id_squadra = s.id
                                     where u.id = \'' . $id . '\' '
                         );
-                        $statistiche_personali = DB::connection('pgsql')->select(
+                        $statistiche_personali = DB::connection('mysql')->select(
                             'SELECT
                                     (SELECT SUM(assist) from statistiche_partita where id_giocatore = \'' . $id . '\') as Assist,
                                     (SELECT SUM(gol) from statistiche_partita where id_giocatore = \'' . $id . '\') as Gol,
                                     (SELECT count(id) from statistiche_partita where id_giocatore = \'' . $id . '\') as Presenze '
                         );
 
-                        $statistiche_squadra = DB::connection('pgsql')->select(
+                        $statistiche_squadra = DB::connection('mysql')->select(
                             'SELECT
                                     (SELECT count(id) from partite   where completata = 1 and id_squadra_vincente = (SELECT id_squadra from giocatori where id_utente = \'' . $id . '\' FETCH NEXT 1 ROWS ONLY) ) as PartiteVinte,
                                     (SELECT count(id) from partite   where completata = 1 and (id_squadra_casa = (SELECT id_squadra from giocatori where id_utente = \'' . $id . '\' FETCH NEXT 1 ROWS ONLY) OR id_squadra_ospite = (SELECT id_squadra from giocatori where id_utente = \'' . $id . '\' FETCH NEXT 1 ROWS ONLY)) and id_squadra_vincente != (SELECT id_squadra from giocatori where id_utente = \'' . $id . '\' FETCH NEXT 1 ROWS ONLY)) as PartitePerse,
@@ -643,7 +643,7 @@ class ApiController extends Controller
                         return response(array("profilo" => $profilo, "statistichePersonali" => $statistiche_personali, "statisticheSquadra" => $statistiche_squadra, "owner" => true), 200);
 
                     } else {
-                        $profilo = DB::connection('pgsql')->select(
+                        $profilo = DB::connection('mysql')->select(
                             'SELECT s.nome as NomeSquadra,
                                     u.nominativo as Nome,
                                     g.ruolo as Ruolo
@@ -652,14 +652,14 @@ class ApiController extends Controller
                                     left join squadra s on g.id_squadra = s.id
                                     where u.id = \'' . $dati['id'] . '\' '
                         );
-                        $statistiche_personali = DB::connection('pgsql')->select(
+                        $statistiche_personali = DB::connection('mysql')->select(
                             'SELECT
                                     (SELECT SUM(assist) from statistiche_partita where id_giocatore = \'' . $dati['id'] . '\') as Assist,
                                     (SELECT SUM(gol) from statistiche_partita where id_giocatore = \'' . $dati['id'] . '\') as Gol,
                                     (SELECT count(id) from statistiche_partita where id_giocatore = \'' . $dati['id'] . '\') as Presenze '
                         );
 
-                        $statistiche_squadra = DB::connection('pgsql')->select(
+                        $statistiche_squadra = DB::connection('mysql')->select(
                             'SELECT
                                     (SELECT count(id) from partite   where completata = 1 and id_squadra_vincente = (SELECT id_squadra from giocatori where id_utente = \'' . $dati['id'] . '\' FETCH NEXT 1 ROWS ONLY) ) as PartiteVinte,
                                     (SELECT count(id) from partite   where completata = 1 and (id_squadra_casa = (SELECT id_squadra from giocatori where id_utente = \'' . $dati['id'] . '\' FETCH NEXT 1 ROWS ONLY) OR id_squadra_ospite = (SELECT id_squadra from giocatori where id_utente = \'' . $dati['id'] . '\' FETCH NEXT 1 ROWS ONLY)) and id_squadra_vincente != (SELECT id_squadra from giocatori where id_utente = \'' . $dati['id'] . '\' FETCH NEXT 1 ROWS ONLY)) as PartitePerse,
@@ -682,9 +682,9 @@ class ApiController extends Controller
     {
         $dati = json_decode(file_get_contents('php://input'), true);
         if (isset($dati['token'])) {
-            $utenti = DB::connection('pgsql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
+            $utenti = DB::connection('mysql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
             if ($utenti[0]->abilitato == 1) {
-                $classifica = DB::connection('pgsql')->select('SELECT
+                $classifica = DB::connection('mysql')->select('SELECT
                     s.nome AS Nome,
                     s.id AS id_squadra,
                     COALESCE((SELECT sum(gol) FROM statistiche_partita WHERE id_squadra = s.id),0) AS GolFatti,
@@ -713,9 +713,9 @@ class ApiController extends Controller
     {
         $dati = json_decode(file_get_contents('php://input'), true);
         if (isset($dati['token'])) {
-            $utenti = DB::connection('pgsql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
+            $utenti = DB::connection('mysql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
             if ($utenti[0]->abilitato == 1) {
-                $programma = DB::connection('pgsql')->
+                $programma = DB::connection('mysql')->
                 select('SELECT
                               p.id AS IdPartita,sc.nome as nomeCasa,sc.img as immagineCasa,so.nome as nomeOspite,so.img as immagineOspite,p.data as DataMatch
                               FROM partite p
@@ -737,10 +737,10 @@ class ApiController extends Controller
     {
         $dati = json_decode(file_get_contents('php://input'), true);
         if (isset($dati['token'])) {
-            $utenti = DB::connection('pgsql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
+            $utenti = DB::connection('mysql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
             if (isset($dati['id_squadra'])) {
                 if ($utenti[0]->abilitato == 1) {
-                    $giocatori = DB::connection('pgsql')->
+                    $giocatori = DB::connection('mysql')->
                     select('SELECT
                                 coalesce(SUM(assist),0) as Assist,
                                 coalesce(SUM(gol),0) as Gol,
@@ -754,7 +754,7 @@ class ApiController extends Controller
                                 WHERE u.id_squadra = \'' . $dati['id_squadra'] . '\'
                                 GROUP BY u.nominativo,u.id,g.ruolo'
                     );
-                    $squadra = DB::connection('pgsql')->
+                    $squadra = DB::connection('mysql')->
                     select('
                                 SELECT
                                 (SELECT nome FROM squadra WHERE id = \'' . $dati['id_squadra'] . '\') AS nome,
