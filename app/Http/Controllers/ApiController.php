@@ -742,8 +742,8 @@ class ApiController extends Controller
                 if ($utenti[0]->abilitato == 1) {
                     $giocatori = DB::connection('pgsql')->
                     select('SELECT
-                                SUM(assist) as Assist,
-                                SUM(gol) as Gol,
+                                coalesce(SUM(assist),0) as Assist,
+                                coalesce(SUM(gol),0) as Gol,
                                 COUNT(s.id) as Presenze,
                                 u.nominativo,
                                 u.id as id_giocatore,
