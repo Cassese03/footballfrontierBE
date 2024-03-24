@@ -760,15 +760,27 @@ class ApiController extends Controller
        //     if (sizeof($utenti) <= 0) return response('{"error":"Utente offline."}', 404);
        //     if ($utenti[0]->abilitato == 1) {
 
-                if ($request->hasFile('image')) {
-                    $image = $request->file('image');
-                    $imageName = time() . '.' . $image->getClientOriginalExtension();
-                    $image->move(public_path('images'), $imageName);
+        if ($request->has('image')) {
+            // Decodifica dell'immagine base64
+            $imageData = base64_decode($request->input('image'));
 
-                    return response()->json(['success' => true, 'image_url' => asset('images/' . $imageName)]);
-                } else {
-                    return response()->json(['success' => false, 'message' => 'Nessuna immagine caricata']);
-                }
+            // Genera un nome univoco per l'immagine
+            $imageName = time() . '.jpg';
+
+            // Percorso dove salvare l'immagine
+            $imagePath = public_path('images/') . $imageName;
+
+            // Salva l'immagine sul server
+            file_put_contents($imagePath, $imageData);
+
+            // URL dell'immagine salvata
+            $imageUrl = asset('images/' . $imageName);
+
+            // Invia una risposta al client
+            return response()->json(['success' => true, 'image_url' => $imageUrl]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Nessuna immagine inviata']);
+        }
 
       //         //  return response($notifiche, 200);
       //     } else
