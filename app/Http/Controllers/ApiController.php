@@ -755,10 +755,10 @@ class ApiController extends Controller
     public function crea_notifica(Request $request)
     {
         $dati = json_decode(file_get_contents('php://input'), true);
-        if (isset($dati['token'])) {
-            $utenti = DB::connection('mysql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
-            if (sizeof($utenti) <= 0) return response('{"error":"Utente offline."}', 404);
-            if ($utenti[0]->abilitato == 1) {
+       // if (isset($dati['token'])) {
+       //     $utenti = DB::connection('mysql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
+       //     if (sizeof($utenti) <= 0) return response('{"error":"Utente offline."}', 404);
+       //     if ($utenti[0]->abilitato == 1) {
 
                 if ($request->hasFile('image')) {
                     $image = $request->file('image');
@@ -770,12 +770,12 @@ class ApiController extends Controller
                     return response()->json(['success' => false, 'message' => 'Nessuna immagine caricata']);
                 }
 
-                //  return response($notifiche, 200);
-            } else
-                return response('{"error": "Utente non abilitato."}', 404);
-        } else
-            return response('{
-                            "error": "Token non esistente."}', 404);
+      //         //  return response($notifiche, 200);
+      //     } else
+      //         return response('{"error": "Utente non abilitato."}', 404);
+      // } else
+      //     return response('{
+      //                     "error": "Token non esistente."}', 404);
     }
 
     public function dettaglio_squadra(Request $request)
