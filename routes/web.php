@@ -79,7 +79,7 @@ Route::any('api2/profilo',array('uses'=>'ApiController@profilo'));
 Route::any('api2/classifica',array('uses'=>'ApiController@classifica'));
 Route::any('api2/calendario',array('uses'=>'ApiController@calendario'));
 Route::any('api2/dettaglio_squadra',array('uses'=>'ApiController@dettaglio_squadra'));
-Route::any('api2/notifiche',array('uses'=>'ApiController@notifiche'));
+Route::any('api2/notifica',array('uses'=>'ApiController@notifica'));
 /*
 Route::any('api/registra',array('uses'=>'ApiController@registra'));
 Route::any('api/viaggio',array('uses'=>'ApiController@viaggio'));
