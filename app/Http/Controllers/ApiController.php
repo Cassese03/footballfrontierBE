@@ -734,17 +734,43 @@ class ApiController extends Controller
     }
 
 
-
     public function notifica(Request $request)
     {
         $dati = json_decode(file_get_contents('php://input'), true);
         if (isset($dati['token'])) {
             $utenti = DB::connection('mysql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
+            if (sizeof($utenti) <= 0) return response('{"error":"Utente offline."}', 404);
             if ($utenti[0]->abilitato == 1) {
                 $notifiche = DB::connection('mysql')->select('SELECT * from notifica order by id desc');
 
                 return response($notifiche, 200);
 
+            } else
+                return response('{"error": "Utente non abilitato."}', 404);
+        } else
+            return response('{
+                            "error": "Token non esistente."}', 404);
+    }
+
+    public function crea_notifica(Request $request)
+    {
+        $dati = json_decode(file_get_contents('php://input'), true);
+        if (isset($dati['token'])) {
+            $utenti = DB::connection('mysql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
+            if (sizeof($utenti) <= 0) return response('{"error":"Utente offline."}', 404);
+            if ($utenti[0]->abilitato == 1) {
+
+                if ($request->hasFile('image')) {
+                    $image = $request->file('image');
+                    $imageName = time() . '.' . $image->getClientOriginalExtension();
+                    $image->move(public_path('images'), $imageName);
+
+                    return response()->json(['success' => true, 'image_url' => asset('images/' . $imageName)]);
+                } else {
+                    return response()->json(['success' => false, 'message' => 'Nessuna immagine caricata']);
+                }
+
+                //  return response($notifiche, 200);
             } else
                 return response('{"error": "Utente non abilitato."}', 404);
         } else
