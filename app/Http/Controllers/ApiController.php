@@ -733,6 +733,25 @@ class ApiController extends Controller
                             "error": "Token non esistente."}', 404);
     }
 
+
+
+    public function notifica(Request $request)
+    {
+        $dati = json_decode(file_get_contents('php://input'), true);
+        if (isset($dati['token'])) {
+            $utenti = DB::connection('mysql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
+            if ($utenti[0]->abilitato == 1) {
+                $notifiche = DB::connection('mysql')->select('SELECT * from notifica order by id desc');
+
+                return response($notifiche, 200);
+
+            } else
+                return response('{"error": "Utente non abilitato."}', 404);
+        } else
+            return response('{
+                            "error": "Token non esistente."}', 404);
+    }
+
     public function dettaglio_squadra(Request $request)
     {
         $dati = json_decode(file_get_contents('php://input'), true);
