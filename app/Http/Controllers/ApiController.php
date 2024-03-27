@@ -831,12 +831,13 @@ class ApiController extends Controller
 
         // Genera il calendario
         $calendario = generaCalendarioUnico($squadre);
-
+        print_r($calendario);
+        echo '************************';
         // Stampare il calendario
         foreach ($calendario as $giornata => $partite) {
             echo "Giornata " . ($giornata + 1) . ":\n";
             foreach ($partite as $partita) {
-                echo $partita . " vs " . $partita . "\n";
+                echo $partita[0] . " vs " . $partita[0] . "\n";
             }
             echo "\n";
         }
@@ -845,7 +846,8 @@ class ApiController extends Controller
         echo "\n";
         echo "\n";
         // Funzione per generare le partite di una giornata
-        function generaPartite($squadre) {
+        function generaPartite($squadre)
+        {
             $partite = array();
             $numSquadre = count($squadre);
 
