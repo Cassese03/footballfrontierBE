@@ -816,6 +816,48 @@ class ApiController extends Controller
         echo '********************************';
 
 
+        function findUniqueSets($matches, $size)
+        {
+            if ($size == 0) {
+                return [[]];
+            }
+
+            $uniqueSets = [];
+            foreach ($matches as $key => $match) {
+                $rest = array_filter($matches, function ($m) use ($match) {
+                    return $m[0] != $match[0] && $m[0] != $match[1] && $m[1] != $match[0] && $m[1] != $match[1];
+                });
+
+                $rest = array_values($rest); // Re-index the array
+
+                $subsets = findUniqueSets($rest, $size - 1);
+                foreach ($subsets as $subset) {
+                    array_unshift($subset, $match);
+                    $uniqueSets[] = $subset;
+                }
+            }
+            return $uniqueSets;
+        }
+
+        function groupMatches($matches, $groupSize)
+        {
+            return findUniqueSets($matches, $groupSize);
+        }
+
+        $matches = json_encode($partite);
+
+        $groupedMatches = groupMatches($matches, 3);
+
+// Output the grouped matches
+        foreach ($groupedMatches as $group) {
+            echo "[";
+            foreach ($group as $match) {
+                echo "[" . $match[0] . ", " . $match[1] . "], ";
+            }
+            echo "]\n";
+        }
+
+
     }
 
 
