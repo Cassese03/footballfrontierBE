@@ -844,7 +844,7 @@ class ApiController extends Controller
             return findUniqueSets($matches, $groupSize);
         }
 
-        $matches = json_encode($partite);
+        $matches = $partite;
 
         $groupedMatches = groupMatches($matches, 3);
 
