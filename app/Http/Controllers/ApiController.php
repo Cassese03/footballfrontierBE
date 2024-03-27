@@ -850,16 +850,24 @@ class ApiController extends Controller
         $partite = array();
         $numSquadre = count($squadre);
 
-        // Itera su tutte le squadre tranne l'ultima
+        // Itera su tutte le squadre
         for ($i = 0; $i < $numSquadre - 1; $i++) {
-            // Itera sulle squadre successive
+            // Seleziona la squadra di casa
+            $squadraCasa = $squadre[$i];
+
+            // Itera sulle squadre successive per selezionare la squadra in trasferta
             for ($j = $i + 1; $j < $numSquadre; $j++) {
+                // Seleziona la squadra in trasferta
+                $squadraTrasferta = $squadre[$j];
+
                 // Aggiungi la partita con l'ordine corretto delle squadre
-                $partite[] = array($squadre[$i], $squadre[$j]);
+                $partite[] = array($squadraCasa, $squadraTrasferta);
             }
         }
-        //echo '********************************';
-        //print_r($partite);
+
+        print_r($partite);
+
+        echo '********************************';
 
         // Funzione per generare il calendario con partite uniche per giornata
         function generaCalendario($squadre,$partite)
