@@ -755,10 +755,10 @@ class ApiController extends Controller
     public function crea_notifica(Request $request)
     {
         $dati = json_decode(file_get_contents('php://input'), true);
-       // if (isset($dati['token'])) {
-       //     $utenti = DB::connection('mysql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
-       //     if (sizeof($utenti) <= 0) return response('{"error":"Utente offline."}', 404);
-       //     if ($utenti[0]->abilitato == 1) {
+        // if (isset($dati['token'])) {
+        //     $utenti = DB::connection('mysql')->select('SELECT * from utente where access_token = \'' . $dati['token'] . '\' ');
+        //     if (sizeof($utenti) <= 0) return response('{"error":"Utente offline."}', 404);
+        //     if ($utenti[0]->abilitato == 1) {
 
         if ($request->has('image')) {
             // Decodifica dell'immagine base64
@@ -782,96 +782,57 @@ class ApiController extends Controller
             return response()->json(['success' => false, 'message' => 'Nessuna immagine inviata']);
         }
 
-      //         //  return response($notifiche, 200);
-      //     } else
-      //         return response('{"error": "Utente non abilitato."}', 404);
-      // } else
-      //     return response('{
-      //                     "error": "Token non esistente."}', 404);
+        //         //  return response($notifiche, 200);
+        //     } else
+        //         return response('{"error": "Utente non abilitato."}', 404);
+        // } else
+        //     return response('{
+        //                     "error": "Token non esistente."}', 404);
     }
 
-    public function test(){
 
-
-// Definizione delle squadre di Serie A
+    function test()
+    {
+        // Definizione delle squadre di Serie A
         $squadre = array("Juventus", "Inter", "Milan", "Napoli", "Roma", "Atalanta");
 
-// Funzione per generare le partite di una giornata
-        function generaPartite($squadre)
-        {
-            $partite = array();
-            $numSquadre = count($squadre);
-
-            for ($i = 0; $i < $numSquadre - 1; $i++) {
-                for ($j = $i + 1; $j < $numSquadre; $j++) {
-                    $partite[] = array($squadre[$i], $squadre[$j]);
-                }
-            }
-
-            return $partite;
-        }
-
-// Funzione per ruotare le squadre
-        function ruotaSquadre(&$squadre)
-        {
-            $primaSquadra = array_shift($squadre);
-            array_push($squadre, array_pop($squadre));
-            array_unshift($squadre, $primaSquadra);
-        }
-
-// Funzione per generare tutte le giornate
+        // Funzione per generare tutte le partite
         function generaCalendario($squadre)
         {
             $calendario = array();
-            $numGiornate = count($squadre) - 1;
 
-            for ($i = 0; $i < $numGiornate * 2; $i++) {
-                $partite = generaPartite($squadre);
-                $calendario[$i] = $partite;
-                ruotaSquadre($squadre);
+            // Itera su tutte le squadre
+            foreach ($squadre as $squadraCasa) {
+                foreach ($squadre as $squadraTrasferta) {
+                    // Assicura che la squadra di casa non giochi contro se stessa
+                    if ($squadraCasa !== $squadraTrasferta) {
+                        $calendario[] = array($squadraCasa, $squadraTrasferta);
+                    }
+                }
             }
 
             return $calendario;
         }
 
-// Funzione per verificare se una partita è già stata giocata
-        function partitaGiaGiocata($partita, $partiteGiocate)
+        // Funzione per mescolare le partite in modo casuale
+        function mescolaPartite($calendario)
         {
-            foreach ($partiteGiocate as $partitaGiocata) {
-                if (($partita[0] == $partitaGiocata[0] && $partita[1] == $partitaGiocata[1]) || ($partita[0] == $partitaGiocata[1] && $partita[1] == $partitaGiocata[0])) {
-                    return true;
-                }
-            }
-            return false;
+            shuffle($calendario);
+            return $calendario;
         }
 
-// Funzione per generare il calendario con partite uniche per giornata
+        // Funzione per generare il calendario con partite uniche per giornata
         function generaCalendarioUnico($squadre)
         {
-            $calendario = array();
-            $numGiornate = count($squadre) - 1;
-
-            $partiteGiocate = array();
-
-            for ($i = 0; $i < $numGiornate; $i++) {
-                $partite = generaPartite($squadre);
-
-                foreach ($partite as $partita) {
-                    while (partitaGiaGiocata($partita, $partiteGiocate)) {
-                        shuffle($partite);
-                    }
-                    $calendario[$i][] = $partita;
-                    $partiteGiocate[] = $partita;
-                }
-
-                ruotaSquadre($squadre);
-            }
-
+            $calendario = generaCalendario($squadre);
+            $calendario = mescolaPartite($calendario);
             return $calendario;
         }
 
-// Stampare il calendario
+        // Genera il calendario
         $calendario = generaCalendarioUnico($squadre);
+
+        // Stampare il calendario
         foreach ($calendario as $giornata => $partite) {
             echo "Giornata " . ($giornata + 1) . ":\n";
             foreach ($partite as $partita) {
@@ -879,9 +840,8 @@ class ApiController extends Controller
             }
             echo "\n";
         }
-
-
     }
+
 
     public function dettaglio_squadra(Request $request)
     {
