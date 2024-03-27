@@ -815,12 +815,6 @@ class ApiController extends Controller
 
         echo '********************************';
 
-
-        function chooseInitialMatch($matches)
-        {
-            return $matches[array_rand($matches)];
-        }
-
         function findUniqueSets($matches, $size, $initialMatch = null)
         {
             if ($size == 0) {
@@ -850,7 +844,7 @@ class ApiController extends Controller
 
         function groupMatches($matches, $groupSize)
         {
-            $initialMatch = chooseInitialMatch($matches);
+            $initialMatch = $matches[0];
             $groupedMatches = findUniqueSets($matches, $groupSize, $initialMatch);
             array_unshift($groupedMatches, [$initialMatch]);
             return $groupedMatches;
@@ -884,7 +878,6 @@ class ApiController extends Controller
             }
             echo "]\n";
         }
-
 
     }
 
