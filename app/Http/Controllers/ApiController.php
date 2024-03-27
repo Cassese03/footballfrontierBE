@@ -833,7 +833,7 @@ class ApiController extends Controller
         $calendario = generaCalendarioUnico($squadre);
         print_r($calendario);
         echo '************************';
-        // Stampare il calendario
+        /*// Stampare il calendario
         foreach ($calendario as $giornata => $partite) {
             echo "Giornata " . ($giornata + 1) . ":\n";
             foreach ($partite as $partita) {
@@ -845,23 +845,22 @@ class ApiController extends Controller
         echo "\n";
         echo "\n";
         echo "\n";
-        // Funzione per generare le partite di una giornata
-        function generaPartite($squadre)
-        {
-            $partite = array();
-            $numSquadre = count($squadre);
+        // Funzione per generare le partite di una giornata*/
 
-            // Itera su tutte le squadre tranne l'ultima
-            for ($i = 0; $i < $numSquadre - 1; $i++) {
-                // Itera sulle squadre successive
-                for ($j = $i + 1; $j < $numSquadre; $j++) {
-                    // Aggiungi la partita con l'ordine corretto delle squadre
-                    $partite[] = array($squadre[$i], $squadre[$j]);
-                }
+        $partite = array();
+        $numSquadre = count($squadre);
+
+        // Itera su tutte le squadre tranne l'ultima
+        for ($i = 0; $i < $numSquadre - 1; $i++) {
+            // Itera sulle squadre successive
+            for ($j = $i + 1; $j < $numSquadre; $j++) {
+                // Aggiungi la partita con l'ordine corretto delle squadre
+                $partite[] = array($squadre[$i], $squadre[$j]);
             }
-            echo '********************************';
-            echo $partite;
         }
+        echo '********************************';
+        echo $partite;
+
 
     }
 
