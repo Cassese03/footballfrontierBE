@@ -836,7 +836,7 @@ class ApiController extends Controller
         foreach ($calendario as $giornata => $partite) {
             echo "Giornata " . ($giornata + 1) . ":\n";
             foreach ($partite as $partita) {
-                echo $partita[0] . " vs " . $partita[1] . "\n";
+                echo $partita . " vs " . $partita . "\n";
             }
             echo "\n";
         }
