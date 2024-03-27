@@ -790,6 +790,99 @@ class ApiController extends Controller
       //                     "error": "Token non esistente."}', 404);
     }
 
+    public function test(){
+
+
+// Definizione delle squadre di Serie A
+        $squadre = array("Juventus", "Inter", "Milan", "Napoli", "Roma", "Atalanta");
+
+// Funzione per generare le partite di una giornata
+        function generaPartite($squadre)
+        {
+            $partite = array();
+            $numSquadre = count($squadre);
+
+            for ($i = 0; $i < $numSquadre - 1; $i++) {
+                for ($j = $i + 1; $j < $numSquadre; $j++) {
+                    $partite[] = array($squadre[$i], $squadre[$j]);
+                }
+            }
+
+            return $partite;
+        }
+
+// Funzione per ruotare le squadre
+        function ruotaSquadre(&$squadre)
+        {
+            $primaSquadra = array_shift($squadre);
+            array_push($squadre, array_pop($squadre));
+            array_unshift($squadre, $primaSquadra);
+        }
+
+// Funzione per generare tutte le giornate
+        function generaCalendario($squadre)
+        {
+            $calendario = array();
+            $numGiornate = count($squadre) - 1;
+
+            for ($i = 0; $i < $numGiornate * 2; $i++) {
+                $partite = generaPartite($squadre);
+                $calendario[$i] = $partite;
+                ruotaSquadre($squadre);
+            }
+
+            return $calendario;
+        }
+
+// Funzione per verificare se una partita è già stata giocata
+        function partitaGiaGiocata($partita, $partiteGiocate)
+        {
+            foreach ($partiteGiocate as $partitaGiocata) {
+                if (($partita[0] == $partitaGiocata[0] && $partita[1] == $partitaGiocata[1]) || ($partita[0] == $partitaGiocata[1] && $partita[1] == $partitaGiocata[0])) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+// Funzione per generare il calendario con partite uniche per giornata
+        function generaCalendarioUnico($squadre)
+        {
+            $calendario = array();
+            $numGiornate = count($squadre) - 1;
+
+            $partiteGiocate = array();
+
+            for ($i = 0; $i < $numGiornate; $i++) {
+                $partite = generaPartite($squadre);
+
+                foreach ($partite as $partita) {
+                    while (partitaGiaGiocata($partita, $partiteGiocate)) {
+                        shuffle($partite);
+                    }
+                    $calendario[$i][] = $partita;
+                    $partiteGiocate[] = $partita;
+                }
+
+                ruotaSquadre($squadre);
+            }
+
+            return $calendario;
+        }
+
+// Stampare il calendario
+        $calendario = generaCalendarioUnico($squadre);
+        foreach ($calendario as $giornata => $partite) {
+            echo "Giornata " . ($giornata + 1) . ":\n";
+            foreach ($partite as $partita) {
+                echo $partita[0] . " vs " . $partita[1] . "\n";
+            }
+            echo "\n";
+        }
+
+
+    }
+
     public function dettaglio_squadra(Request $request)
     {
         $dati = json_decode(file_get_contents('php://input'), true);

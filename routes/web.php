@@ -81,6 +81,7 @@ Route::any('api2/calendario',array('uses'=>'ApiController@calendario'));
 Route::any('api2/dettaglio_squadra',array('uses'=>'ApiController@dettaglio_squadra'));
 Route::any('api2/notifica',array('uses'=>'ApiController@notifica'));
 Route::any('api2/crea_notifica',array('uses'=>'ApiController@crea_notifica'));
+Route::any('api2/test',array('uses'=>'ApiController@test'));
 /*
 Route::any('api/registra',array('uses'=>'ApiController@registra'));
 Route::any('api/viaggio',array('uses'=>'ApiController@viaggio'));
