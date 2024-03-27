@@ -855,6 +855,8 @@ class ApiController extends Controller
             }
         }
 
+        generaPartiteGiornata($squadre);
+
     }
 
 
