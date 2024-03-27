@@ -859,7 +859,7 @@ class ApiController extends Controller
             }
         }
         echo '********************************';
-        echo $partite;
+        print_r($partite);
 
 
     }
