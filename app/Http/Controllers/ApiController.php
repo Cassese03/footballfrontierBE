@@ -865,7 +865,7 @@ class ApiController extends Controller
         function generaCalendario($squadre)
         {
             $calendario = array();
-            $partite = generaPartite($squadre);
+           // $partite = generaPartite($squadre);
             $numeroGiornata = 1;
 
             // Dividi le partite in gruppi per giornata
