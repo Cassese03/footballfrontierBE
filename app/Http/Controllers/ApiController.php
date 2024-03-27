@@ -816,7 +816,13 @@ class ApiController extends Controller
         echo '********************************';
 
 
-        function findUniqueSets($matches, $size, $initialMatch = null) {
+        function chooseInitialMatch($matches)
+        {
+            return $matches[array_rand($matches)];
+        }
+
+        function findUniqueSets($matches, $size, $initialMatch = null)
+        {
             if ($size == 0) {
                 return [[]];
             }
@@ -833,7 +839,7 @@ class ApiController extends Controller
 
                 $rest = array_values($rest); // Re-index the array
 
-                $subsets = findUniqueSets($rest, $size - 1, $match);
+                $subsets = findUniqueSets($rest, $size - 1, $initialMatch);
                 foreach ($subsets as $subset) {
                     array_unshift($subset, $match);
                     $uniqueSets[] = $subset;
@@ -842,11 +848,31 @@ class ApiController extends Controller
             return $uniqueSets;
         }
 
-        function groupMatches($matches, $groupSize) {
-            return findUniqueSets($matches, $groupSize);
+        function groupMatches($matches, $groupSize)
+        {
+            $initialMatch = chooseInitialMatch($matches);
+            $groupedMatches = findUniqueSets($matches, $groupSize, $initialMatch);
+            array_unshift($groupedMatches, [$initialMatch]);
+            return $groupedMatches;
         }
 
-        $matches = $partite;
+        $matches = [
+            ["Juventus", "Inter"],
+            ["Juventus", "Milan"],
+            ["Juventus", "Napoli"],
+            ["Juventus", "Roma"],
+            ["Juventus", "Atalanta"],
+            ["Inter", "Milan"],
+            ["Inter", "Napoli"],
+            ["Inter", "Roma"],
+            ["Inter", "Atalanta"],
+            ["Milan", "Napoli"],
+            ["Milan", "Roma"],
+            ["Milan", "Atalanta"],
+            ["Napoli", "Roma"],
+            ["Napoli", "Atalanta"],
+            ["Roma", "Atalanta"]
+        ];
 
         $groupedMatches = groupMatches($matches, 3);
 
@@ -858,6 +884,7 @@ class ApiController extends Controller
             }
             echo "]\n";
         }
+
 
     }
 
