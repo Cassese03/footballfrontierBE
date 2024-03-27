@@ -797,55 +797,55 @@ class ApiController extends Controller
         $squadre = array("Juventus", "Inter", "Milan", "Napoli", "Roma", "Atalanta");
 
         // Funzione per generare tutte le partite
-        function generaCalendario($squadre)
-        {
-            $calendario = array();
+        /*   function generaCalendario($squadre)
+           {
+               $calendario = array();
 
-            // Itera su tutte le squadre
-            foreach ($squadre as $squadraCasa) {
-                foreach ($squadre as $squadraTrasferta) {
-                    // Assicura che la squadra di casa non giochi contro se stessa
-                    if ($squadraCasa !== $squadraTrasferta) {
-                        $calendario[] = array($squadraCasa, $squadraTrasferta);
-                    }
-                }
-            }
+               // Itera su tutte le squadre
+               foreach ($squadre as $squadraCasa) {
+                   foreach ($squadre as $squadraTrasferta) {
+                       // Assicura che la squadra di casa non giochi contro se stessa
+                       if ($squadraCasa !== $squadraTrasferta) {
+                           $calendario[] = array($squadraCasa, $squadraTrasferta);
+                       }
+                   }
+               }
 
-            return $calendario;
-        }
+               return $calendario;
+           }
 
-        // Funzione per mescolare le partite in modo casuale
-        function mescolaPartite($calendario)
-        {
-            shuffle($calendario);
-            return $calendario;
-        }
+           // Funzione per mescolare le partite in modo casuale
+           function mescolaPartite($calendario)
+           {
+               shuffle($calendario);
+               return $calendario;
+           }
 
-        // Funzione per generare il calendario con partite uniche per giornata
-        function generaCalendarioUnico($squadre)
-        {
-            $calendario = generaCalendario($squadre);
-            $calendario = mescolaPartite($calendario);
-            return $calendario;
-        }
+           // Funzione per generare il calendario con partite uniche per giornata
+           function generaCalendarioUnico($squadre)
+           {
+               $calendario = generaCalendario($squadre);
+               $calendario = mescolaPartite($calendario);
+               return $calendario;
+           }
 
-        // Genera il calendario
-        $calendario = generaCalendarioUnico($squadre);
-        print_r($calendario);
-        echo '************************';
-        /*// Stampare il calendario
-        foreach ($calendario as $giornata => $partite) {
-            echo "Giornata " . ($giornata + 1) . ":\n";
-            foreach ($partite as $partita) {
-                echo $partita[0] . " vs " . $partita[0] . "\n";
-            }
-            echo "\n";
-        }
+           // Genera il calendario
+           $calendario = generaCalendarioUnico($squadre);
+           print_r($calendario);
+           echo '************************';
+           // Stampare il calendario
+           foreach ($calendario as $giornata => $partite) {
+               echo "Giornata " . ($giornata + 1) . ":\n";
+               foreach ($partite as $partita) {
+                   echo $partita[0] . " vs " . $partita[0] . "\n";
+               }
+               echo "\n";
+           }
 
-        echo "\n";
-        echo "\n";
-        echo "\n";
-        // Funzione per generare le partite di una giornata*/
+           echo "\n";
+           echo "\n";
+           echo "\n";
+           // Funzione per generare le partite di una giornata*/
 
         $partite = array();
         $numSquadre = count($squadre);
@@ -858,10 +858,32 @@ class ApiController extends Controller
                 $partite[] = array($squadre[$i], $squadre[$j]);
             }
         }
-        echo '********************************';
-        print_r($partite);
+        //echo '********************************';
+        //print_r($partite);
+
+        // Funzione per generare il calendario con partite uniche per giornata
+        function generaCalendario($squadre)
+        {
+            $calendario = array();
+            $partite = generaPartite($squadre);
+            $numeroGiornata = 1;
+
+            // Dividi le partite in gruppi per giornata
+            $gruppiPartite = array_chunk($partite, count($squadre) / 2);
+
+            // Assegna il numero di giornata progressivo ad ogni gruppo di partite
+            foreach ($gruppiPartite as $gruppoPartite) {
+                echo "Giornata " . $numeroGiornata . ":\n";
+                foreach ($gruppoPartite as $partita) {
+                    echo $partita[0] . " vs " . $partita[1] . "\n";
+                }
+                echo "\n";
+                $numeroGiornata++;
+            }
+        }
 
 
+        generaCalendario($squadre);
     }
 
 
