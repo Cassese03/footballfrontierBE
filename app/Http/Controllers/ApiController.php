@@ -811,7 +811,7 @@ class ApiController extends Controller
             }
         }
 
-        print_r($partite);
+        print_r(json_encode($partite));
 
         echo '********************************';
 
