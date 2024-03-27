@@ -797,7 +797,7 @@ class ApiController extends Controller
         $partite = array();
         $numSquadre = count($squadre);
 
-        /*for ($i = 0; $i < $numSquadre - 1; $i++) {
+        for ($i = 0; $i < $numSquadre - 1; $i++) {
             // Seleziona la squadra di casa
             $squadraCasa = $squadre[$i];
 
@@ -809,52 +809,17 @@ class ApiController extends Controller
                 // Aggiungi la partita con l'ordine corretto delle squadre
                 $partite[] = array($squadraCasa, $squadraTrasferta);
             }
-        }*/
-
-        //print_r($partite);
-
-        //echo '********************************';
-        // Definizione delle squadre di Serie A
-        $squadre = array("Juventus", "Inter", "Milan", "Napoli", "Roma", "Atalanta");
-
-        // Funzione per generare le partite di una giornata
-        function generaPartiteGiornata($squadre)
-        {
-            // Mischia le squadre
-            shuffle($squadre);
-
-            // Seleziona le prime 3 squadre
-            $partiteGiornata = array_slice($squadre, 0, 3);
-
-            // Genera tutte le combinazioni di partite possibili tra le squadre selezionate
-            $partite = array();
-            for ($i = 0; $i < 2; $i++) {
-                for ($j = $i + 1; $j < 3; $j++) {
-                    $partite[] = array($partiteGiornata[$i], $partiteGiornata[$j]);
-                }
-            }
-
-            return $partite;
         }
 
-        // Genera il calendario
-        $calendario = array();
-        for ($giornata = 1; $giornata <= count($squadre) / 3; $giornata++) {
-            $calendario[] = generaPartiteGiornata($squadre);
-        }
+        print_r($partite);
 
-        // Stampare il calendario
-        foreach ($calendario as $giornata => $partite) {
-            echo "Giornata " . ($giornata + 1) . ":\n";
-            foreach ($partite as $partita) {
-                echo $partita[0] . " vs " . $partita[1] . "\n";
-            }
-            echo "\n";
-        }
+        echo '********************************';
+
+
     }
 
-    public
-    function dettaglio_squadra(Request $request)
+
+    public function dettaglio_squadra(Request $request)
     {
         $dati = json_decode(file_get_contents('php://input'), true);
         if (isset($dati['token'])) {
