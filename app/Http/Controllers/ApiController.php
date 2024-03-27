@@ -862,7 +862,7 @@ class ApiController extends Controller
         //print_r($partite);
 
         // Funzione per generare il calendario con partite uniche per giornata
-        function generaCalendario($squadre)
+        function generaCalendario($squadre,$partite)
         {
             $calendario = array();
            // $partite = generaPartite($squadre);
@@ -883,7 +883,7 @@ class ApiController extends Controller
         }
 
 
-        generaCalendario($squadre);
+        generaCalendario($squadre,$partite);
     }
 
 
