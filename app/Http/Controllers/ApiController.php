@@ -814,53 +814,47 @@ class ApiController extends Controller
         //print_r($partite);
 
         //echo '********************************';
-        function test()
+        // Definizione delle squadre di Serie A
+        $squadre = array("Juventus", "Inter", "Milan", "Napoli", "Roma", "Atalanta");
+
+        // Funzione per generare le partite di una giornata
+        function generaPartiteGiornata($squadre)
         {
-            // Definizione delle squadre di Serie A
-            $squadre = array("Juventus", "Inter", "Milan", "Napoli", "Roma", "Atalanta");
+            // Mischia le squadre
+            shuffle($squadre);
 
-            // Funzione per generare le partite di una giornata
-            function generaPartiteGiornata($squadre)
-            {
-                // Mischia le squadre
-                shuffle($squadre);
+            // Seleziona le prime 3 squadre
+            $partiteGiornata = array_slice($squadre, 0, 3);
 
-                // Seleziona le prime 3 squadre
-                $partiteGiornata = array_slice($squadre, 0, 3);
-
-                // Genera tutte le combinazioni di partite possibili tra le squadre selezionate
-                $partite = array();
-                for ($i = 0; $i < 2; $i++) {
-                    for ($j = $i + 1; $j < 3; $j++) {
-                        $partite[] = array($partiteGiornata[$i], $partiteGiornata[$j]);
-                    }
+            // Genera tutte le combinazioni di partite possibili tra le squadre selezionate
+            $partite = array();
+            for ($i = 0; $i < 2; $i++) {
+                for ($j = $i + 1; $j < 3; $j++) {
+                    $partite[] = array($partiteGiornata[$i], $partiteGiornata[$j]);
                 }
-
-                return $partite;
             }
 
-            // Genera il calendario
-            $calendario = array();
-            for ($giornata = 1; $giornata <= count($squadre) / 3; $giornata++) {
-                $calendario[] = generaPartiteGiornata($squadre);
-            }
-
-            // Stampare il calendario
-            foreach ($calendario as $giornata => $partite) {
-                echo "Giornata " . ($giornata + 1) . ":\n";
-                foreach ($partite as $partita) {
-                    echo $partita[0] . " vs " . $partita[1] . "\n";
-                }
-                echo "\n";
-            }
+            return $partite;
         }
 
-        generaPartiteGiornata($squadre);
+        // Genera il calendario
+        $calendario = array();
+        for ($giornata = 1; $giornata <= count($squadre) / 3; $giornata++) {
+            $calendario[] = generaPartiteGiornata($squadre);
+        }
 
+        // Stampare il calendario
+        foreach ($calendario as $giornata => $partite) {
+            echo "Giornata " . ($giornata + 1) . ":\n";
+            foreach ($partite as $partita) {
+                echo $partita[0] . " vs " . $partita[1] . "\n";
+            }
+            echo "\n";
+        }
     }
 
-
-    public function dettaglio_squadra(Request $request)
+    public
+    function dettaglio_squadra(Request $request)
     {
         $dati = json_decode(file_get_contents('php://input'), true);
         if (isset($dati['token'])) {
