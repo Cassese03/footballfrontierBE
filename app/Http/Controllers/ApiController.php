@@ -857,8 +857,8 @@ class ApiController extends Controller
                     $partite[] = array($squadre[$i], $squadre[$j]);
                 }
             }
-
-            return $partite;
+            echo '********************************';
+            echo $partite;
         }
 
     }
