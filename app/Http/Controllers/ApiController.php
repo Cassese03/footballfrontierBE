@@ -811,26 +811,29 @@ class ApiController extends Controller
             }
         }
 
-        print_r(json_encode($partite));
+        //print_r(json_encode($partite));
 
         echo '********************************';
 
 
-        function findUniqueSets($matches, $size)
-        {
+        function findUniqueSets($matches, $size, $initialMatch = null) {
             if ($size == 0) {
                 return [[]];
             }
 
             $uniqueSets = [];
             foreach ($matches as $key => $match) {
+                if ($initialMatch !== null && ($match[0] == $initialMatch[0] || $match[0] == $initialMatch[1] || $match[1] == $initialMatch[0] || $match[1] == $initialMatch[1])) {
+                    continue; // Skip matches involving teams from initial match
+                }
+
                 $rest = array_filter($matches, function ($m) use ($match) {
                     return $m[0] != $match[0] && $m[0] != $match[1] && $m[1] != $match[0] && $m[1] != $match[1];
                 });
 
                 $rest = array_values($rest); // Re-index the array
 
-                $subsets = findUniqueSets($rest, $size - 1);
+                $subsets = findUniqueSets($rest, $size - 1, $match);
                 foreach ($subsets as $subset) {
                     array_unshift($subset, $match);
                     $uniqueSets[] = $subset;
@@ -839,8 +842,7 @@ class ApiController extends Controller
             return $uniqueSets;
         }
 
-        function groupMatches($matches, $groupSize)
-        {
+        function groupMatches($matches, $groupSize) {
             return findUniqueSets($matches, $groupSize);
         }
 
@@ -856,7 +858,6 @@ class ApiController extends Controller
             }
             echo "]\n";
         }
-
 
     }
 
